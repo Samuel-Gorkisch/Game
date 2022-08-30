@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Custom.Utils;
 
-public class RotateHands : MonoBehaviour
+public class Aim : MonoBehaviour
 {
-    public GameObject hands;
-
     private Transform aimTransform;
 
     private Vector3 lastMouseWorldPosition = Vector3.zero;
+    public enum Direction { Left, Right, Neutral };
+
+    public Direction lastMoveDirection;
 
     void Awake()
     {
-        aimTransform = hands.transform;
+        aimTransform = transform.Find("Aim");
+        lastMoveDirection = Direction.Neutral;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Vector3 mouseWorldPosition = Mouse.GetWorldPosition();
@@ -27,20 +28,30 @@ public class RotateHands : MonoBehaviour
         int topAngleToSwitch = 90;
         int bottomAngleToSwitch = -90;
 
-        if (mouseWorldPosition.x < lastMouseWorldPosition.x)
+        if (lastMoveDirection == Direction.Left || mouseWorldPosition.x < lastMouseWorldPosition.x)
         {
             topAngleToSwitch = 110;
             bottomAngleToSwitch = -110;
-        } else if (mouseWorldPosition.x > lastMouseWorldPosition.x)
+        }
+        else if (lastMoveDirection == Direction.Right || mouseWorldPosition.x > lastMouseWorldPosition.x)
         {
             topAngleToSwitch = 70;
             bottomAngleToSwitch = -70;
         }
 
+        if (mouseWorldPosition.x < lastMouseWorldPosition.x)
+        {
+            lastMoveDirection = Direction.Left;
+        }
+        else if (mouseWorldPosition.x > lastMouseWorldPosition.x)
+        {
+            lastMoveDirection = Direction.Right;
+        }
+
         lastMouseWorldPosition = mouseWorldPosition;
 
         Vector3 localScale = Vector3.one;
-        if (angle > topAngleToSwitch || angle < bottomAngleToSwitch)
+        if (Mathf.Round(angle) > topAngleToSwitch || Mathf.Round(angle) < bottomAngleToSwitch)
         {
             localScale.y = -1f;
         }

@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour
 {
     public bool shouldSpawn = true;
     public GameObject enemy;
-    public int chanceOfSpawning = 0;
+    public int chanceOfSpawning = 100;
     private int fixedUpdateCount = 0;
 
     void FixedUpdate()
